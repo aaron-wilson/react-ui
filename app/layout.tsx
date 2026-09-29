@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { buildConfig } from "../src/config/server";
 import { ThemeToggle } from "../src/components/ThemeToggle";
+import { AppClientProvider } from "../src/graphql/AppClientProvider";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -21,8 +22,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             </Link>
             <ThemeToggle />
           </header>
-          {children}
-          <footer className="py-10 text-sm opacity-60">Wander · Made for curious days.</footer>
+          <AppClientProvider>{children}</AppClientProvider>
+          <footer className="py-10 text-sm opacity-75">Wander · Made for curious days.</footer>
         </div>
       </body>
     </html>

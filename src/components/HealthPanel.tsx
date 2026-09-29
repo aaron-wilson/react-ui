@@ -25,7 +25,7 @@ export function HealthPanel() {
             ? "Connected and ready to plan."
             : "The service is offline. Start GraphQL and REST, then reload."}
       </p>
-      <code className="mt-4 block break-all text-xs opacity-70">{publicConfig.graphqlUrl}</code>
+      <code className="mt-4 block break-all text-xs opacity-75">{publicConfig.graphqlUrl}</code>
     </section>
   );
 }

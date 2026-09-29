@@ -4,16 +4,16 @@
   color-scheme: light;
   --paper: #f6f2e9;
   --ink: #19382f;
-  --muted: #68786c;
+  --muted: #52665b;
   --surface: #fffdf7;
   --line: #d6ded1;
-  --accent: #d5552f;
+  --accent: #a53a22;
 }
 :root[data-theme="dark"] {
   color-scheme: dark;
   --paper: #11241e;
   --ink: #f3efdf;
-  --muted: #b1bdaa;
+  --muted: #c1d0c0;
   --surface: #1c3229;
   --line: #3e594b;
   --accent: #f28b62;
@@ -101,6 +101,39 @@ a:focus-visible {
   font-weight: 750;
   letter-spacing: -0.07em;
   line-height: 0.85;
+}
+.field {
+  display: grid;
+  gap: 0.45rem;
+  font-size: 0.88rem;
+  font-weight: 650;
+}
+.field input,
+.field select {
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 0.7rem;
+  background: var(--paper);
+  color: var(--ink);
+  padding: 0.65rem 0.8rem;
+  font-weight: 400;
+}
+.field input:focus-visible,
+.field select:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+.error {
+  color: #b42e24;
+  font-weight: 650;
+}
+[data-theme="dark"] .error {
+  color: #ffad9e;
+}
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 @media (prefers-reduced-motion: reduce) {
   *,

@@ -9,6 +9,8 @@
     "build": "next build --webpack",
     "start": "node scripts/serve-static.mjs",
     "test": "vitest run",
+    "test:e2e": "playwright test --project=chromium",
+    "test:e2e:all": "playwright test",
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
@@ -23,9 +25,11 @@
     "next": "16.3.7",
     "react": "19.3.0",
     "react-dom": "19.3.0",
-    "urql": "5.0.4"
+    "urql": "5.0.4",
+    "zod": "4.4.3"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
     "@graphql-codegen/cli": "7.4.3",
     "@graphql-codegen/client-preset": "6.2.0",
     "@playwright/test": "1.63.0",
