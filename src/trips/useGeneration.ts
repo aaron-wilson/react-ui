@@ -47,7 +47,12 @@ export function useGeneration(getToken: () => string | null) {
             ...current,
             seq: event.seq,
             status: event.status,
-            text: event.type === "chunk" ? current.text + (event.text ?? "") : current.text,
+            text:
+              event.type === "chunk"
+                ? current.text + (event.text ?? "")
+                : event.type === "snapshot"
+                  ? (event.text ?? current.text)
+                  : current.text,
             tripId: event.tripId ?? current.tripId,
             error:
               event.status === "failed"
