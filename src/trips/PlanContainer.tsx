@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useQuery } from "urql";
 import { z } from "zod";
-import { demoToken } from "../auth/demo";
+import { useAuth } from "../auth/AuthProvider";
 import { ListTrips } from "../graphql/operations";
 import { useGeneration } from "./useGeneration";
 
@@ -19,7 +19,8 @@ const formSchema = z.object({
 
 export function PlanContainer() {
   const router = useRouter();
-  const generation = useGeneration(demoToken);
+  const { identity, getToken, signIn } = useAuth();
+  const generation = useGeneration(getToken);
   const [city, setCity] = useState("");
   const [startDate, setStartDate] = useState("");
   const [dayCount, setDayCount] = useState(2);
@@ -29,6 +30,7 @@ export function PlanContainer() {
   const [{ data, fetching, error }, reload] = useQuery({
     query: ListTrips,
     variables: { first: 20 },
+    pause: !identity,
   });
   useEffect(() => {
     if (generation.status === "completed" && generation.tripId)
@@ -58,6 +60,15 @@ export function PlanContainer() {
       preferences: { interests: parsed.data.interests, pace: parsed.data.pace },
     });
   };
+  if (!identity)
+    return (
+      <main className="py-16">
+        <h1 className="text-3xl font-semibold">Sign in to plan a trip</h1>
+        <button className="primary mt-6" onClick={() => void signIn()}>
+          Sign in
+        </button>
+      </main>
+    );
   return (
     <main className="pb-16">
       <p className="eyebrow mt-12">New journey</p>

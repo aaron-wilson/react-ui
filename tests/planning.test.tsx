@@ -4,6 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { Provider } from "urql";
 import { createScopedClient } from "../src/graphql/client";
 import { PlanContainer } from "../src/trips/PlanContainer";
+import { AuthProvider } from "../src/auth/AuthProvider";
 
 const push = vi.hoisted(() => vi.fn());
 vi.mock("next/navigation", () => ({ useRouter: () => ({ push }) }));
@@ -41,9 +42,11 @@ it("creates a trip through GraphQL and follows the completed SSE stream", async 
   vi.stubGlobal("fetch", transport);
   const client = createScopedClient("http://localhost:4000/graphql", () => "demo", transport);
   render(
-    <Provider value={client}>
-      <PlanContainer />
-    </Provider>
+    <AuthProvider>
+      <Provider value={client}>
+        <PlanContainer />
+      </Provider>
+    </AuthProvider>
   );
   const user = userEvent.setup();
   await user.type(screen.getByLabelText("City"), "Oslo");

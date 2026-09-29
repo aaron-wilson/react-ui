@@ -1,13 +1,22 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { demoIdentity, demoToken } from "../auth/demo";
+import { AuthProvider, useAuth } from "../auth/AuthProvider";
 import { ScopedGraphProvider } from "./client";
+
+function BoundGraph({ children }: { children: ReactNode }) {
+  const { identity, getToken } = useAuth();
+  return (
+    <ScopedGraphProvider identity={identity} getToken={getToken}>
+      {children}
+    </ScopedGraphProvider>
+  );
+}
 
 export function AppClientProvider({ children }: { children: ReactNode }) {
   return (
-    <ScopedGraphProvider identity={demoIdentity} getToken={demoToken}>
-      {children}
-    </ScopedGraphProvider>
+    <AuthProvider>
+      <BoundGraph>{children}</BoundGraph>
+    </AuthProvider>
   );
 }

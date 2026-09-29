@@ -4,20 +4,21 @@ import { useEffect, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useClient, useQuery } from "urql";
-import { demoToken } from "../auth/demo";
+import { useAuth } from "../auth/AuthProvider";
 import { PinActivity, ShareTrip, SwapActivity, TripDetails } from "../graphql/operations";
 import { encodeShareLink } from "./shareLink";
 import { useGeneration } from "./useGeneration";
 
 export function TripContainer() {
   const id = useSearchParams().get("id");
+  const { identity, getToken, signIn } = useAuth();
   const client = useClient();
   const [{ data, fetching, error }, reload] = useQuery({
     query: TripDetails,
     variables: { id: id ?? "" },
-    pause: !id,
+    pause: !id || !identity,
   });
-  const generation = useGeneration(demoToken);
+  const generation = useGeneration(getToken);
   const [actionError, setActionError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   useEffect(() => {
@@ -30,6 +31,15 @@ export function TripContainer() {
         <Link className="primary mt-6 inline-flex" href="/plan/">
           Plan a trip
         </Link>
+      </main>
+    );
+  if (!identity)
+    return (
+      <main className="py-16">
+        <h1 className="text-3xl font-semibold">Sign in to view your trip</h1>
+        <button className="primary mt-6" onClick={() => void signIn()}>
+          Sign in
+        </button>
       </main>
     );
   if (fetching && !data)
