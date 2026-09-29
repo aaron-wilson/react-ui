@@ -9,5 +9,6 @@ coverage
 playwright-report
 test-results
 pnpm-lock.yaml
+src/gql
 bun.lock
 package-lock.json
