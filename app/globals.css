@@ -144,3 +144,29 @@ button:disabled {
     animation-duration: 0.01ms !important;
   }
 }
+.docs-content h1,
+.docs-content h2 {
+  font-weight: 700;
+  line-height: 1.2;
+}
+.docs-content h1 {
+  font-size: 1.75rem;
+}
+.docs-content h2 {
+  font-size: 1.35rem;
+  margin-top: 1.5rem;
+}
+.docs-content p {
+  line-height: 1.7;
+  margin-top: 0.75rem;
+}
+.docs-content code {
+  background: color-mix(in srgb, currentColor 10%, transparent);
+  padding: 0.1em 0.25em;
+  border-radius: 0.2em;
+}
+.docs-content pre {
+  overflow-x: auto;
+  padding: 1rem;
+  border-radius: 0.5rem;
+}

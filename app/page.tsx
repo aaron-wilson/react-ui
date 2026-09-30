@@ -1,5 +1,6 @@
 import { HealthPanel } from "../src/components/HealthPanel";
 import Link from "next/link";
+import { WanderPicture } from "../src/components/WanderPicture";
 
 export default function Home() {
   return (
@@ -18,14 +19,11 @@ export default function Home() {
             Start planning <span aria-hidden="true">↗</span>
           </Link>
         </div>
-        <div className="hero-mark" aria-hidden="true">
-          <span>
-            go
-            <br />
-            somewhere
-          </span>
-        </div>
+        <WanderPicture />
       </div>
+      <Link href="/docs/" className="underline">
+        Explore how Wander works
+      </Link>
       <div className="grid gap-5 pb-14 md:grid-cols-2">
         <HealthPanel />
         <section className="surface rounded-2xl p-6">
