@@ -14,20 +14,26 @@ export default defineConfig({
   ],
   webServer: [
     {
-      command: "bun --no-env-file src/server.ts",
+      command: "bun --no-env-file src/bootstrap.ts",
       cwd: resolve(root, "../rest-api"),
       url: "http://127.0.0.1:3000/health",
-      env: { APP_MODE: "demo", PROVIDER_STORE: "memory", RATE_LIMIT_PER_MINUTE: "10000" },
+      env: {
+        APP_MODE: "demo",
+        PROVIDER_STORE: "memory",
+        RATE_LIMIT_PER_MINUTE: "10000",
+        LOG_LEVEL: "info",
+      },
       reuseExistingServer: false,
     },
     {
-      command: "node_modules/.bin/tsc -p tsconfig.json && node dist/src/server.js",
+      command: "node_modules/.bin/tsc -p tsconfig.json && node dist/src/bootstrap.js",
       cwd: resolve(root, "../graph-api"),
       url: "http://127.0.0.1:4000/health",
       env: {
         APP_MODE: "demo",
         REST_URL: "http://127.0.0.1:3000",
         CORS_ORIGIN: "http://127.0.0.1:3001",
+        LOG_LEVEL: "info",
         DOTENV_CONFIG_PATH: "/dev/null",
       },
       reuseExistingServer: false,
