@@ -3,6 +3,7 @@
 import { useMemo, type ReactNode } from "react";
 import { Provider, cacheExchange, createClient, fetchExchange } from "urql";
 import { publicConfig } from "../config/public";
+import { newTraceparent } from "../telemetry/traceparent";
 
 export function createScopedClient(
   url: string,
@@ -17,6 +18,7 @@ export function createScopedClient(
       const token = getToken();
       const headers: Record<string, string> = {};
       if (token) headers.Authorization = `Bearer ${token}`;
+      headers.traceparent = newTraceparent();
       return { headers };
     },
   });

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { newTraceparent } from "../telemetry/traceparent";
 
 export const generationEventSchema = z.object({
   id: z.string().min(1),
@@ -24,6 +25,7 @@ export async function consumeGeneration(
     headers: {
       Authorization: `Bearer ${token}`,
       Accept: "text/event-stream",
+      traceparent: newTraceparent(),
       ...(after ? { "Last-Event-ID": String(after) } : {}),
     },
     signal,
