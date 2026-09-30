@@ -66,7 +66,7 @@ jobs:
       - name: Prepare installed Chrome for the default browser project
         run: react-ui/node_modules/.bin/playwright install --with-deps chrome
       - name: Run the implemented local checks
-        run: node graph-rest-react-stack/scripts/verify-repo.mjs react-ui --e2e
+        run: node graph-rest-react-stack/scripts/verify-repo.mjs react-ui --acceptance --e2e
       - name: Check inactive workflow syntax and environment examples
         run: |
           node graph-rest-react-stack/scripts/check-workflows.mjs

@@ -9,7 +9,7 @@ ARG UI_SITE_ORIGIN=http://localhost:3001
 ARG NEXT_PUBLIC_SENTRY_DSN=
 ARG NEXT_PUBLIC_SENTRY_RELEASE=
 ENV NEXT_PUBLIC_GRAPHQL_URL=$NEXT_PUBLIC_GRAPHQL_URL UI_SITE_ORIGIN=$UI_SITE_ORIGIN NEXT_PUBLIC_SENTRY_DSN=$NEXT_PUBLIC_SENTRY_DSN NEXT_PUBLIC_SENTRY_RELEASE=$NEXT_PUBLIC_SENTRY_RELEASE
-RUN node scripts/sync-docs.mjs --check && node scripts/build-images.mjs --check && pnpm build
+RUN node scripts/build-images.mjs --check && pnpm build
 
 FROM node:24-slim
 ENV NODE_ENV=production HOST=0.0.0.0 PORT=3001

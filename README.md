@@ -73,8 +73,8 @@ pnpm lint
 pnpm test
 pnpm codegen:check
 pnpm schema:check
-pnpm docs:check
 pnpm images:check
+pnpm test:images
 pnpm build
 pnpm test:static
 pnpm test:e2e
@@ -98,6 +98,6 @@ A blank `NEXT_PUBLIC_SENTRY_DSN` disables reporting. Opt-in builds scrub private
 
 ## Optional Features
 
-- **MDX:** compact committed examples rendered at `/docs/` with a local interactive component.
-- **Sharp:** generated 640/1280 AVIF and WebP images with drift checks.
+- **MDX:** `content/*.mdx` is the source for `/docs/`, including a local interactive component.
+- **Sharp:** committed 640/1280 AVIF and WebP assets. `images:check` decodes the files and validates dimensions, formats and source/recipe/artifact hashes without re-encoding. After artwork or generator changes, run `pnpm images:build` and review the images and `artwork/images.json` together. Encoder bytes can differ across platforms; the manifest records the reviewed artifacts rather than promising identical regeneration.
 - **Static delivery:** no Next server, SSR, Server Actions or runtime image service.
