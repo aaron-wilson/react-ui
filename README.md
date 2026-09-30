@@ -1,40 +1,103 @@
-# Wander UI
+# react-ui
 
-Wander is a React/Next.js App Router trip planner with typed urql operations and Tailwind controls. Next performs development and static builds; Vite transforms Vitest component tests. `output: "export"` writes `out/` with no Next server, API routes, SSR or Server Actions. MDX teaching pages are committed build-time snapshots; Sharp creates local responsive image variants with no image server.
+> Static React/Next.js frontend with typed GraphQL, Tailwind, MDX, and browser tests.
 
-## Local use
+---
 
-Use the Node 24 runtime baseline and pnpm 11.18.0 lockfile. Dependency setup is explicit: `pnpm install --frozen-lockfile`. With installed dependencies, start the sibling REST and GraphQL demo services, then run `pnpm dev`. Defaults are demo mode and `http://localhost:4000/graphql`. `UI_SITE_ORIGIN` sets static metadata. `NEXT_PUBLIC_*` values are public build inputs; source-map upload credentials in `.env.example` are build-only secrets and never browser configuration.
+## Table of Contents
 
-For a built preview:
+- [Overview](#overview)
+- [Tech Stack](#tech-stack)
+- [Getting Started](#getting-started)
+- [Configuration](#configuration)
+- [Testing](#testing)
+- [CI/CD](#cicd)
+- [Observability](#observability)
+- [Optional Features](#optional-features)
+
+---
+
+## Overview
+
+The frontend demonstrates a typed planning journey across real GraphQL and REST services. It combines streamed feedback, editable day boards, saved trips, public sharing and accessible controls.
+
+- React/Next App Router exported to static files
+- Generated urql operations and authenticated SSE
+- Cognito PKCE, MDX examples and local responsive images
+
+---
+
+## Tech Stack
+
+| Layer                   | Technology                                  | Role                                              |
+| ----------------------- | ------------------------------------------- | ------------------------------------------------- |
+| Language / runtime      | TypeScript 5.9.2 · Node 24                  | Strict types and build/runtime baseline           |
+| Package management      | pnpm 11.18.0                                | Locked independent install                        |
+| Framework               | Next 16.3.7 · React 19.3.0                  | Development server and static App Router export   |
+| API client / validation | urql 5.0.4 · Zod 4.4.3                      | Generated operations and boundary checks          |
+| Styling                 | Tailwind 4.3.3                              | Responsive controls and theme tokens              |
+| Component tests         | Vite 8.3.1 · Vitest 5.0.2 · Testing Library | Vite transforms tests; Next builds the app        |
+| Browser tests           | Playwright 1.63.0 · axe 4.13                | Real three-service journey and accessibility      |
+| Content / images        | MDX 3.1.1 · Sharp 0.34.4                    | Small committed MDX examples and AVIF/WebP assets |
+| Deployment              | CDK · private S3 · CloudFront OAC           | Static hosting, routing and cache policies        |
+| Observability           | Sentry React 11.1.0                         | Optional scrubbed errors and performance          |
+
+---
+
+## Getting Started
+
+Use Node 24 and pnpm 11.18.0. Start REST and GraphQL in their sibling directories first.
 
 ```sh
-NEXT_TELEMETRY_DISABLED=1 node_modules/.bin/next build --webpack
-node scripts/serve-static.mjs
+pnpm install --frozen-lockfile
+pnpm dev
 ```
 
-The preview serves `out/` at `http://localhost:3001`; `HOST` and `PORT` control only this listener. Configure the GraphQL URL before building. The browser talks to GraphQL, never directly to REST. Trips can be created, streamed, refined, pinned/swapped, saved and shared read-only.
+Open http://localhost:3001/. For the exported artifact, stop the UI dev server and run `pnpm build` then `pnpm start`; both APIs must stay running. Full-stack [hub Compose](https://github.com/aaron-wilson/graph-rest-react-stack) is an alternative to these host servers.
 
-## Authentication and reporting
+---
 
-Live mode requires a public Cognito app client without a secret, Authorization Code + PKCE, `openid`, and the exact static `/auth/callback/` URL. Set `NEXT_PUBLIC_APP_MODE=live` and the domain, client ID, issuer and callback fields in `.env.example`; configure both APIs for the same pool/client. Public sharing needs no sign-in.
+## Configuration
 
-The access token stays in memory. A one-time PKCE verifier/state/nonce stays in sessionStorage for at most ten minutes. Reload requires sign-in; sign-out clears token, pending transaction and identity-scoped urql cache. The callback removes its code from browser history. HTTP and SSE carry tokens in Authorization headers, never URLs. Generation replay lasts only within the graph process; restarts lose pending work.
+[.env.example](.env.example) lists public build inputs and build-only upload credentials. `NEXT_PUBLIC_GRAPHQL_URL` defaults to http://localhost:4000/graphql. Browser settings are compiled at build time.
 
-Sentry reporting is disabled with a blank public DSN. The optional adapter scrubs private event data. Source-map generation and authenticated upload are explicit build-only operations; no upload occurs in default builds.
+Live auth uses a public Cognito client, authorization code + PKCE, and the exact `/auth/callback/` redirect. Tokens stay in memory; reload requires sign-in and sign-out clears the identity cache. Public shares need no login.
 
-For the full container demo, use Compose in the [sibling hub](../graph-rest-react-stack/README.md). Compose runs all three applications instead of the source dev commands; stop the source servers first to free ports 3000, 4000 and 3001. A built host preview is also local and needs both APIs running.
+---
 
-## Checks and implementation status
-
-With installed dependencies and the sibling hub platform toolchain:
+## Testing
 
 ```sh
-node ../graph-rest-react-stack/scripts/verify-repo.mjs react-ui --e2e
+pnpm typecheck
+pnpm lint
+pnpm test
+pnpm codegen:check
+pnpm schema:check
+pnpm docs:check
+pnpm images:check
+pnpm build
+pnpm test:static
+pnpm test:e2e
 ```
 
-Checks cover format/lint/types, Vitest UI/auth/monitoring behavior, generated operations/SDL/docs/images drift, static build and actual exported routes/assets, Chrome's real three-service journey, CDK assertions and credential-free synth. The Firefox/WebKit projects are opt-in and require existing Playwright browsers; checks never download them.
+E2E owns all three local servers and uses installed Chrome. `test:e2e:all` adds Firefox/WebKit when their browsers are installed. Infrastructure checks use the sibling hub's platform toolchain.
 
-`infra/` implements private S3/CloudFront OAC hosting, static routes, cache rules and invalidation. `scripts/build-static.mjs` records revision and public configuration; `scripts/publish-static.mjs` defaults to dry-run and uploads only with explicit `--execute`. Cloud hosting, managed sign-in and Sentry exports remain live-unverified. Docker/Compose acceptance requires Docker. All GitHub workflow templates remain inactive. The sibling hub's learning and verification indexes record the exact local evidence and remaining prerequisites.
+---
 
-See the [learning index](../graph-rest-react-stack/docs/README.md), [verification record](../graph-rest-react-stack/docs/verification.md), and [deployment runbook](../graph-rest-react-stack/docs/patterns/deployment-runbook.md) for the shared toolchain and AWS environment flow. AWS hosting uses live Cognito auth even when planning providers are mock; `pnpm dev` means local source development.
+## CI/CD
+
+Disabled workflow templates provide checks and manual OIDC deployment. `infra/` defines S3/CloudFront; `build:static` records artifact identity and `deploy:static` defaults to dry-run. Publication retains hashed assets and uploads HTML last. Cloud delivery and hosted login remain live-unverified.
+
+---
+
+## Observability
+
+A blank `NEXT_PUBLIC_SENTRY_DSN` disables reporting. Opt-in builds scrub private context. `sentry:upload` explicitly uploads source maps with build-only credentials and removes them after success; no upload occurs in normal builds.
+
+---
+
+## Optional Features
+
+- **MDX:** compact committed examples rendered at `/docs/` with a local interactive component.
+- **Sharp:** generated 640/1280 AVIF and WebP images with drift checks.
+- **Static delivery:** no Next server, SSR, Server Actions or runtime image service.
