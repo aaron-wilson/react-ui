@@ -12,12 +12,4 @@ const result = spawnSync("node_modules/.bin/next", ["build", "--webpack"], {
 });
 if (result.error) throw result.error;
 if (result.status !== 0) process.exit(result.status ?? 1);
-await writeFile(
-  "out/deployment.json",
-  JSON.stringify({
-    revision,
-    mode: config.mode,
-    graphqlUrl: config.graphqlUrl,
-    redirectUri: config.cognito?.redirectUri ?? null,
-  }) + "\n"
-);
+await writeFile("out/deployment.json", JSON.stringify({ revision, publicConfig: config }) + "\n");
