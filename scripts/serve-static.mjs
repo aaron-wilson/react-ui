@@ -9,6 +9,8 @@ const contentTypes = {
   ".css": "text/css",
   ".json": "application/json",
   ".svg": "image/svg+xml",
+  ".webp": "image/webp",
+  ".avif": "image/avif",
 };
 createServer(async (request, response) => {
   try {
@@ -26,4 +28,4 @@ createServer(async (request, response) => {
     response.writeHead(404);
     response.end("Not found");
   }
-}).listen(Number(process.env.PORT ?? 3001), "127.0.0.1");
+}).listen(Number(process.env.PORT ?? 3001), process.env.HOST ?? "127.0.0.1");
