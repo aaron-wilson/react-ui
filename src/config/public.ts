@@ -6,16 +6,30 @@ interface PublicInput {
   NEXT_PUBLIC_COGNITO_ISSUER?: string;
   NEXT_PUBLIC_AUTH_REDIRECT_URI?: string;
   NEXT_PUBLIC_COGNITO_CLIENT_SECRET?: string;
+  NEXT_PUBLIC_SENTRY_DSN?: string;
+  NEXT_PUBLIC_SENTRY_RELEASE?: string;
 }
 export type PublicConfig =
-  | { graphqlUrl: string; mode: "demo"; cognito: null }
+  | {
+      graphqlUrl: string;
+      mode: "demo";
+      cognito: null;
+      sentryDsn: string | null;
+      sentryRelease: string | null;
+    }
   | {
       graphqlUrl: string;
       mode: "live";
       cognito: { domain: string; clientId: string; issuer: string; redirectUri: string };
+      sentryDsn: string | null;
+      sentryRelease: string | null;
     };
 
 export function parsePublicConfig(input: PublicInput): PublicConfig {
+  const sentryDsn = input.NEXT_PUBLIC_SENTRY_DSN || null;
+  if (sentryDsn && new URL(sentryDsn).protocol !== "https:")
+    throw new Error("Invalid public Sentry DSN");
+  const sentryRelease = input.NEXT_PUBLIC_SENTRY_RELEASE || null;
   const url = new URL(input.NEXT_PUBLIC_GRAPHQL_URL || "http://localhost:4000/graphql");
   if (
     !["http:", "https:"].includes(url.protocol) ||
@@ -29,7 +43,14 @@ export function parsePublicConfig(input: PublicInput): PublicConfig {
   if (input.NEXT_PUBLIC_COGNITO_CLIENT_SECRET)
     throw new Error("A public Cognito client cannot have a secret");
   const mode = input.NEXT_PUBLIC_APP_MODE || "demo";
-  if (mode === "demo") return Object.freeze({ graphqlUrl: url.toString(), mode, cognito: null });
+  if (mode === "demo")
+    return Object.freeze({
+      graphqlUrl: url.toString(),
+      mode,
+      cognito: null,
+      sentryDsn,
+      sentryRelease,
+    });
   if (mode !== "live") throw new Error("Invalid NEXT_PUBLIC_APP_MODE");
   const {
     NEXT_PUBLIC_COGNITO_DOMAIN: rawDomain,
@@ -69,6 +90,8 @@ export function parsePublicConfig(input: PublicInput): PublicConfig {
       issuer: issuer.toString().replace(/\/$/, ""),
       redirectUri: redirect.toString(),
     },
+    sentryDsn,
+    sentryRelease,
   });
 }
 
@@ -79,4 +102,6 @@ export const publicConfig = parsePublicConfig({
   NEXT_PUBLIC_COGNITO_CLIENT_ID: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID,
   NEXT_PUBLIC_COGNITO_ISSUER: process.env.NEXT_PUBLIC_COGNITO_ISSUER,
   NEXT_PUBLIC_AUTH_REDIRECT_URI: process.env.NEXT_PUBLIC_AUTH_REDIRECT_URI,
+  NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
+  NEXT_PUBLIC_SENTRY_RELEASE: process.env.NEXT_PUBLIC_SENTRY_RELEASE,
 });

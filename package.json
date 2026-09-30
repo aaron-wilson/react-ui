@@ -21,10 +21,12 @@
     "docs:sync": "node scripts/sync-docs.mjs",
     "docs:check": "node scripts/sync-docs.mjs --check",
     "images:build": "node scripts/build-images.mjs",
-    "images:check": "node scripts/build-images.mjs --check"
+    "images:check": "node scripts/build-images.mjs --check",
+    "sentry:upload": "node scripts/upload-sourcemaps.mjs"
   },
   "dependencies": {
     "@graphql-typed-document-node/core": "3.2.0",
+    "@sentry/react": "11.1.0",
     "graphql": "16.11.0",
     "next": "16.3.7",
     "react": "19.3.0",
@@ -40,6 +42,7 @@
     "@mdx-js/react": "3.1.1",
     "@next/mdx": "16.3.7",
     "@playwright/test": "1.63.0",
+    "@sentry/cli": "3.8.0",
     "@tailwindcss/postcss": "4.3.3",
     "@testing-library/jest-dom": "7.0.1",
     "@testing-library/react": "16.3.3",
