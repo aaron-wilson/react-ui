@@ -7,19 +7,19 @@ export function AuthControls() {
   const { mode, identity, signIn, signOut } = useAuth();
   const [error, setError] = useState<string | null>(null);
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex items-center gap-2">
       {identity && (
-        <span className="hidden text-sm opacity-75 sm:inline">
+        <span className="chip chip-quiet hidden sm:inline-flex">
           {mode === "demo" ? "Demo mode" : "Signed in"}
         </span>
       )}
       {identity ? (
-        <button className="control" type="button" onClick={signOut}>
+        <button className="control btn-sm" type="button" onClick={signOut}>
           Sign out
         </button>
       ) : (
         <button
-          className="control"
+          className="control btn-sm"
           type="button"
           onClick={() => void signIn().catch(() => setError("Could not start sign-in."))}
         >

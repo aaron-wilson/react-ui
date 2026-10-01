@@ -3,7 +3,7 @@ import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { THEME_KEY, ThemeToggle, themeScript } from "../src/components/ThemeToggle";
 import { contentTypeFor } from "../scripts/static-types.mjs";
-import { HealthPanel } from "../src/components/HealthPanel";
+import { ServiceStatus } from "../src/components/ServiceStatus";
 import { parsePublicConfig } from "../src/config/public";
 import { createScopedClient } from "../src/graphql/client";
 import { ListTrips } from "../src/graphql/operations";
@@ -62,7 +62,7 @@ it("shows connection errors without exposing a credential", async () => {
     "fetch",
     vi.fn(async () => new Response("", { status: 503 }))
   );
-  render(<HealthPanel />);
+  render(<ServiceStatus />);
   expect(await screen.findByText(/service is offline/)).toBeInTheDocument();
   expect(screen.getByText(/localhost:4000\/graphql/)).toBeInTheDocument();
 });

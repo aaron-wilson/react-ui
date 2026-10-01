@@ -16,7 +16,7 @@ export function WanderPicture() {
         width="1280"
         height="800"
         alt="Illustrated mountain landscape at sunset with a winding path"
-        className="w-full rounded-2xl"
+        className="surface h-auto w-full rounded-3xl"
       />
     </picture>
   );

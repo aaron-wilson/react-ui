@@ -1,39 +1,62 @@
-import { HealthPanel } from "../src/components/HealthPanel";
 import Link from "next/link";
+import { Icon } from "../src/components/Icon";
 import { WanderPicture } from "../src/components/WanderPicture";
+
+const steps = [
+  {
+    title: "Sketch",
+    body: "Name a city, a start date and what you love. A first itinerary takes shape as you watch.",
+  },
+  {
+    title: "Shape",
+    body: "Pin the parts worth keeping, swap the ones that are not, and refine the rest.",
+  },
+  {
+    title: "Share",
+    body: "Send a read-only link to the people coming along. Revoke it whenever you like.",
+  },
+];
 
 export default function Home() {
   return (
     <main>
-      <div className="grid gap-8 py-14 md:grid-cols-[1.4fr_1fr] md:items-end md:py-24">
+      <div className="grid gap-10 py-12 md:grid-cols-[1.2fr_1fr] md:items-center md:py-20">
         <div>
-          <p className="eyebrow">A clearer way to explore</p>
-          <h1 className="mt-5 max-w-2xl text-5xl font-semibold tracking-tight md:text-7xl">
+          <p className="eyebrow">Trip planning, unhurried</p>
+          <h1 className="display mt-5 max-w-2xl text-5xl md:text-7xl">
             Make room for the unexpected.
           </h1>
-          <p className="mt-6 max-w-xl text-lg leading-relaxed opacity-75">
+          <p className="muted mt-6 max-w-xl text-lg leading-relaxed">
             Sketch a city, shape your days, and keep the good discoveries close. Your next itinerary
             starts here.
           </p>
-          <Link className="primary mt-8 inline-flex" href="/plan/">
-            Start planning <span aria-hidden="true">↗</span>
-          </Link>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link className="primary" href="/plan/">
+              Start planning <Icon name="arrow" />
+            </Link>
+            <Link className="control" href="/docs/">
+              How Wander works
+            </Link>
+          </div>
         </div>
         <WanderPicture />
       </div>
-      <Link href="/docs/" className="underline">
-        Explore how Wander works
-      </Link>
-      <div className="grid gap-5 pb-14 md:grid-cols-2">
-        <HealthPanel />
-        <section className="surface rounded-2xl p-6">
-          <p className="eyebrow">Thoughtful by design</p>
-          <h2 className="mt-2 text-xl font-semibold">A plan that moves with you</h2>
-          <p className="mt-2 text-sm leading-relaxed opacity-75">
-            Save ideas, pin favorites, and refine the rest whenever inspiration strikes.
-          </p>
-        </section>
-      </div>
+      <section aria-labelledby="steps-heading" className="pb-10">
+        <h2 id="steps-heading" className="eyebrow">
+          Three steps
+        </h2>
+        <ol className="mt-4 grid gap-5 md:grid-cols-3">
+          {steps.map((step, index) => (
+            <li key={step.title} className="surface rounded-2xl p-6">
+              <span className="step-number" aria-hidden="true">
+                {index + 1}
+              </span>
+              <h3 className="display mt-4 text-2xl">{step.title}</h3>
+              <p className="muted mt-2 text-sm leading-relaxed">{step.body}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
     </main>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useSyncExternalStore } from "react";
+import { Icon } from "./Icon";
 
 export const THEME_KEY = "wander-theme";
 /**
@@ -42,11 +43,12 @@ export function ThemeToggle() {
   return (
     <button
       type="button"
-      className="control"
+      className="control btn-sm icon-btn"
       onClick={toggle}
       aria-label={`Switch to ${dark ? "light" : "dark"} theme`}
+      title={`Switch to ${dark ? "light" : "dark"} theme`}
     >
-      {dark ? "Light" : "Dark"} theme
+      <Icon name={dark ? "sun" : "moon"} />
     </button>
   );
 }
