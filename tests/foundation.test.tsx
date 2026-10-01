@@ -1,13 +1,15 @@
 import { afterEach, expect, it, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { ThemeToggle } from "../src/components/ThemeToggle";
+import { THEME_KEY, ThemeToggle, themeScript } from "../src/components/ThemeToggle";
+import { contentTypeFor } from "../scripts/static-types.mjs";
 import { HealthPanel } from "../src/components/HealthPanel";
 import { parsePublicConfig } from "../src/config/public";
 import { createScopedClient } from "../src/graphql/client";
 import { ListTrips } from "../src/graphql/operations";
 
 afterEach(() => {
+  cleanup();
   vi.unstubAllGlobals();
   localStorage.clear();
   delete document.documentElement.dataset.theme;
@@ -25,6 +27,34 @@ it("rejects unsafe public endpoints and switches themes by keyboard", async () =
   await userEvent.keyboard("{Enter}");
   expect(document.documentElement.dataset.theme).toBe("dark");
   expect(localStorage.getItem("wander-theme")).toBe("dark");
+});
+
+it("applies a stored theme before paint and otherwise leaves the system preference to CSS", () => {
+  const applyStored = () => new Function(themeScript)();
+  applyStored();
+  expect(document.documentElement.dataset.theme).toBeUndefined();
+  localStorage.setItem(THEME_KEY, "dark");
+  applyStored();
+  expect(document.documentElement.dataset.theme).toBe("dark");
+  localStorage.setItem(THEME_KEY, "sepia");
+  delete document.documentElement.dataset.theme;
+  applyStored();
+  expect(document.documentElement.dataset.theme).toBeUndefined();
+});
+
+it("follows a dark system preference without storing or forcing a theme", async () => {
+  vi.stubGlobal("matchMedia", () => ({ matches: true }));
+  render(<ThemeToggle />);
+  expect(await screen.findByRole("button", { name: "Switch to light theme" })).toBeInTheDocument();
+  expect(document.documentElement.dataset.theme).toBeUndefined();
+  expect(localStorage.getItem(THEME_KEY)).toBeNull();
+});
+
+it("serves navigation payloads as text so the router does not reload the page", () => {
+  expect(contentTypeFor("/out/plan/index.txt")).toBe("text/plain; charset=utf-8");
+  expect(contentTypeFor("/out/plan/__next._tree.txt")).toBe("text/plain; charset=utf-8");
+  expect(contentTypeFor("/out/index.html")).toBe("text/html; charset=utf-8");
+  expect(contentTypeFor("/out/unknown.bin")).toBe("application/octet-stream");
 });
 
 it("shows connection errors without exposing a credential", async () => {

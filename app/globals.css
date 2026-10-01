@@ -8,6 +8,23 @@
   --surface: #fffdf7;
   --line: #d6ded1;
   --accent: #a53a22;
+  --on-primary: #ffffff;
+  --danger: #b42e24;
+}
+/* Dark values appear twice: once for the system preference, once for a stored choice. The
+   stored choice is applied by an inline script before first paint, so neither path flashes. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --paper: #11241e;
+    --ink: #f3efdf;
+    --muted: #c1d0c0;
+    --surface: #1c3229;
+    --line: #3e594b;
+    --accent: #f28b62;
+    --on-primary: #11241e;
+    --danger: #ffad9e;
+  }
 }
 :root[data-theme="dark"] {
   color-scheme: dark;
@@ -17,6 +34,8 @@
   --surface: #1c3229;
   --line: #3e594b;
   --accent: #f28b62;
+  --on-primary: #11241e;
+  --danger: #ffad9e;
 }
 html {
   background: var(--paper);
@@ -70,11 +89,8 @@ body {
   background: var(--surface);
 }
 .primary {
-  color: white;
+  color: var(--on-primary);
   background: var(--ink);
-}
-[data-theme="dark"] .primary {
-  color: #11241e;
 }
 .control:hover,
 .primary:hover {
@@ -125,11 +141,8 @@ a:focus-visible {
   outline-offset: 2px;
 }
 .error {
-  color: #b42e24;
+  color: var(--danger);
   font-weight: 650;
-}
-[data-theme="dark"] .error {
-  color: #ffad9e;
 }
 button:disabled {
   opacity: 0.55;

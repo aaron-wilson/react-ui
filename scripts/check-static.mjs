@@ -35,6 +35,12 @@ try {
     assert.match(response.headers.get("content-type"), /text\/html/);
     assert.match(await response.text(), /<html/);
   }
+  for (const path of ["/index.txt", "/plan/index.txt", "/trip/index.txt"]) {
+    const response = await fetch(origin + path);
+    assert.equal(response.status, 200, path);
+    // Any other type makes the router replace client navigation with a full page load.
+    assert.match(response.headers.get("content-type"), /^text\/plain/, path);
+  }
   for (const path of ["/images/wander-city-640.avif", "/images/wander-city-1280.webp"]) {
     const response = await fetch(origin + path);
     assert.equal(response.status, 200, path);
@@ -42,8 +48,11 @@ try {
   }
   for (const path of ["/missing/", "/images/missing.webp"])
     assert.equal((await fetch(origin + path)).status, 404, path);
-  console.log("Static direct routes, docs, callback/share queries and missing assets passed");
+  console.log(
+    "Static direct routes, navigation payloads, docs, callback/share queries and missing assets passed"
+  );
 } finally {
+  const exited = new Promise((resolve) => server.once("exit", (code) => resolve(code)));
   server.kill();
-  await new Promise((resolve) => server.once("exit", resolve));
+  assert.equal(await exited, 0, "Static server did not stop cleanly on SIGTERM");
 }

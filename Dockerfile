@@ -16,7 +16,7 @@ ENV NODE_ENV=production HOST=0.0.0.0 PORT=3001
 WORKDIR /app
 RUN useradd --system --uid 10001 wander
 COPY --from=build --chown=wander:wander /app/out ./out
-COPY --from=build --chown=wander:wander /app/scripts/serve-static.mjs ./scripts/serve-static.mjs
+COPY --from=build --chown=wander:wander /app/scripts/serve-static.mjs /app/scripts/static-types.mjs ./scripts/
 USER wander
 EXPOSE 3001
 HEALTHCHECK --interval=30s --timeout=3s CMD node -e "fetch('http://127.0.0.1:3001/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"

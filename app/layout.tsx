@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { buildConfig } from "../src/config/server";
-import { ThemeToggle } from "../src/components/ThemeToggle";
+import { ThemeToggle, themeScript } from "../src/components/ThemeToggle";
 import { AppClientProvider } from "../src/graphql/AppClientProvider";
 import { AuthControls } from "../src/auth/AuthControls";
 import { MonitoringBoundary } from "../src/monitoring/MonitoringBoundary";
@@ -15,7 +15,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
       <body>
         <MonitoringBoundary>
           <AppClientProvider>
