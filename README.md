@@ -19,28 +19,28 @@
 
 ## Overview
 
-The frontend demonstrates a typed planning journey across real GraphQL and REST services. It combines streamed feedback, editable day boards, saved trips, public sharing and accessible controls.
+The frontend supports trip planning through typed GraphQL operations backed by REST services. It combines streamed feedback, editable day boards, saved trips, public sharing and accessible controls.
 
 - React/Next App Router exported to static files
 - Generated urql operations and authenticated SSE
-- Cognito PKCE, MDX examples and local responsive images
+- Cognito PKCE, MDX planning guides and local responsive images
 
 ---
 
 ## Tech Stack
 
-| Layer                   | Technology                                  | Role                                              |
-| ----------------------- | ------------------------------------------- | ------------------------------------------------- |
-| Language / runtime      | TypeScript 5.9.2 · Node 24                  | Strict types and build/runtime baseline           |
-| Package management      | pnpm 11.18.0                                | Locked independent install                        |
-| Framework               | Next 16.3.7 · React 19.3.0                  | Development server and static App Router export   |
-| API client / validation | urql 5.0.4 · Zod 4.4.3                      | Generated operations and boundary checks          |
-| Styling                 | Tailwind 4.3.3                              | Responsive controls and theme tokens              |
-| Component tests         | Vite 8.3.1 · Vitest 5.0.2 · Testing Library | Vite transforms tests; Next builds the app        |
-| Browser tests           | Playwright 1.63.0 · axe 4.13                | Real three-service journey and accessibility      |
-| Content / images        | MDX 3.1.1 · Sharp 0.34.4                    | Small committed MDX examples and AVIF/WebP assets |
-| Deployment              | CDK · private S3 · CloudFront OAC           | Static hosting, routing and cache policies        |
-| Observability           | Sentry React 11.1.0                         | Optional scrubbed errors and performance          |
+| Layer                   | Technology                                  | Role                                            |
+| ----------------------- | ------------------------------------------- | ----------------------------------------------- |
+| Language / runtime      | TypeScript 5.9.2 · Node 24                  | Strict types and build/runtime baseline         |
+| Package management      | pnpm 11.18.0                                | Locked independent install                      |
+| Framework               | Next 16.3.7 · React 19.3.0                  | Development server and static App Router export |
+| API client / validation | urql 5.0.4 · Zod 4.4.3                      | Generated operations and boundary checks        |
+| Styling                 | Tailwind 4.3.3                              | Responsive controls and theme tokens            |
+| Component tests         | Vite 8.3.1 · Vitest 5.0.2 · Testing Library | Vite transforms tests; Next builds the app      |
+| Browser tests           | Playwright 1.63.0 · axe 4.13                | Real three-service journey and accessibility    |
+| Content / images        | MDX 3.1.1 · Sharp 0.34.4                    | Planning guides and AVIF/WebP assets            |
+| Deployment              | CDK · private S3 · CloudFront OAC           | Static hosting, routing and cache policies      |
+| Observability           | Sentry React 11.1.0                         | Optional scrubbed errors and performance        |
 
 ---
 
