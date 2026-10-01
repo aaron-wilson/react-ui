@@ -14,7 +14,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
 type Documents = {
-    "\n  query ListTrips($first: Int!) {\n    trips(first: $first) {\n      items {\n        id\n        city\n        version\n        updatedAt\n      }\n      nextCursor\n    }\n  }\n": typeof types.ListTripsDocument,
+    "\n  query ListTrips($first: Int!) {\n    trips(first: $first) {\n      items {\n        id\n        city\n        version\n        updatedAt\n        days {\n          id\n          date\n        }\n      }\n      nextCursor\n    }\n  }\n": typeof types.ListTripsDocument,
     "\n  query TripDetails($id: ID!) {\n    trip(id: $id) {\n      id\n      ownerId\n      city\n      version\n      updatedAt\n      preferences {\n        interests\n        pace\n      }\n      days {\n        id\n        date\n        activities {\n          id\n          title\n          pinned\n        }\n      }\n      share {\n        token\n        expiresAt\n      }\n    }\n  }\n": typeof types.TripDetailsDocument,
     "\n  mutation StartCreate($input: CreateTripInput!) {\n    startCreateGeneration(input: $input) {\n      id\n      status\n      tripId\n    }\n  }\n": typeof types.StartCreateDocument,
     "\n  mutation StartRefine($input: RefineTripInput!) {\n    startRefineGeneration(input: $input) {\n      id\n      status\n      tripId\n    }\n  }\n": typeof types.StartRefineDocument,
@@ -24,7 +24,7 @@ type Documents = {
     "\n  query SharedTrip($ownerId: ID!, $tripId: ID!, $token: String!) {\n    sharedTrip(ownerId: $ownerId, tripId: $tripId, token: $token) {\n      id\n      city\n      updatedAt\n      days {\n        id\n        date\n        activities {\n          id\n          title\n          pinned\n        }\n      }\n    }\n  }\n": typeof types.SharedTripDocument,
 };
 const documents: Documents = {
-    "\n  query ListTrips($first: Int!) {\n    trips(first: $first) {\n      items {\n        id\n        city\n        version\n        updatedAt\n      }\n      nextCursor\n    }\n  }\n": types.ListTripsDocument,
+    "\n  query ListTrips($first: Int!) {\n    trips(first: $first) {\n      items {\n        id\n        city\n        version\n        updatedAt\n        days {\n          id\n          date\n        }\n      }\n      nextCursor\n    }\n  }\n": types.ListTripsDocument,
     "\n  query TripDetails($id: ID!) {\n    trip(id: $id) {\n      id\n      ownerId\n      city\n      version\n      updatedAt\n      preferences {\n        interests\n        pace\n      }\n      days {\n        id\n        date\n        activities {\n          id\n          title\n          pinned\n        }\n      }\n      share {\n        token\n        expiresAt\n      }\n    }\n  }\n": types.TripDetailsDocument,
     "\n  mutation StartCreate($input: CreateTripInput!) {\n    startCreateGeneration(input: $input) {\n      id\n      status\n      tripId\n    }\n  }\n": types.StartCreateDocument,
     "\n  mutation StartRefine($input: RefineTripInput!) {\n    startRefineGeneration(input: $input) {\n      id\n      status\n      tripId\n    }\n  }\n": types.StartRefineDocument,
@@ -51,7 +51,7 @@ export function graphql(source: string): unknown;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query ListTrips($first: Int!) {\n    trips(first: $first) {\n      items {\n        id\n        city\n        version\n        updatedAt\n      }\n      nextCursor\n    }\n  }\n"): (typeof documents)["\n  query ListTrips($first: Int!) {\n    trips(first: $first) {\n      items {\n        id\n        city\n        version\n        updatedAt\n      }\n      nextCursor\n    }\n  }\n"];
+export function graphql(source: "\n  query ListTrips($first: Int!) {\n    trips(first: $first) {\n      items {\n        id\n        city\n        version\n        updatedAt\n        days {\n          id\n          date\n        }\n      }\n      nextCursor\n    }\n  }\n"): (typeof documents)["\n  query ListTrips($first: Int!) {\n    trips(first: $first) {\n      items {\n        id\n        city\n        version\n        updatedAt\n        days {\n          id\n          date\n        }\n      }\n      nextCursor\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

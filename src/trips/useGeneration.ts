@@ -5,6 +5,7 @@ import { useClient } from "urql";
 import type { CreateTripInput, RefineTripInput } from "../gql/graphql";
 import { StartCreate, StartRefine } from "../graphql/operations";
 import { publicConfig } from "../config/public";
+import { friendlyError } from "../graphql/errors";
 import { consumeGeneration, type GenerationEvent } from "./stream";
 
 type State = {
@@ -90,7 +91,7 @@ export function useGeneration(getToken: () => string | null) {
         setState({
           ...empty,
           status: "failed",
-          error: result.error?.message ?? "Could not start planning.",
+          error: friendlyError(result.error, "Planning could not start. Try again."),
         });
         return;
       }
@@ -106,7 +107,7 @@ export function useGeneration(getToken: () => string | null) {
         setState({
           ...empty,
           status: "failed",
-          error: result.error?.message ?? "Could not start refinement.",
+          error: friendlyError(result.error, "Refinement could not start. Try again."),
         });
         return;
       }

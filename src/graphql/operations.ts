@@ -8,6 +8,10 @@ export const ListTrips = graphql(/* GraphQL */ `
         city
         version
         updatedAt
+        days {
+          id
+          date
+        }
       }
       nextCursor
     }
