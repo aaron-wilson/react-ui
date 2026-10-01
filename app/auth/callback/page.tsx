@@ -20,14 +20,16 @@ export default function AuthCallbackPage() {
       .catch(() => setError(true));
   }, [completeCallback, router]);
   return (
-    <main className="py-16" aria-live="polite">
-      <h1 className="text-3xl font-semibold">{error ? "Sign-in failed" : "Completing sign-in…"}</h1>
+    <main className="py-20" aria-live="polite">
+      <h1 className="display text-4xl md:text-5xl">
+        {error ? "Sign-in failed" : "Completing sign-in…"}
+      </h1>
       {error && (
         <>
-          <p role="alert" className="mt-4">
+          <p role="alert" className="muted mt-4 max-w-md">
             The sign-in request could not be completed. Start again from this site.
           </p>
-          <Link className="primary mt-6 inline-flex" href="/">
+          <Link className="primary mt-8" href="/">
             Back home
           </Link>
         </>

@@ -49,7 +49,15 @@ export function formatUpdated(value: string, now = Date.now()) {
   if (minutes < 60) return `${minutes} min ago`;
   const hours = Math.floor(minutes / 60);
   if (hours < 24) return `${hours} h ago`;
-  return new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric" }).format(time);
+  return formatShortDate(value);
+}
+
+/** A timestamp as a short calendar date in the viewer's zone, such as "Oct 8". */
+export function formatShortDate(value: string) {
+  const time = Date.parse(value);
+  return Number.isNaN(time)
+    ? null
+    : new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric" }).format(time);
 }
 
 export const paces = [

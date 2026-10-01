@@ -82,9 +82,7 @@ it("asks for the missing details instead of submitting an incomplete plan", asyn
   renderPlan(transport);
   await userEvent.setup().click(screen.getByRole("button", { name: "Create itinerary" }));
   expect(await screen.findByRole("alert")).toHaveTextContent("Enter a city");
-  expect(transport.mock.calls.some(([, init]) => String(init?.body).includes("StartCreate"))).toBe(
-    false
-  );
+  expect(transport.mock.calls.some(([, init]) => init?.method === "POST")).toBe(false);
 });
 
 const generationId = "ZGVtbw:00000000-0000-4000-8000-000000000001";
@@ -111,8 +109,8 @@ it("creates a trip through GraphQL and follows the completed SSE stream", async 
         .join("");
       return new Response(events, { headers: { "content-type": "text/event-stream" } });
     }
-    const body = JSON.parse(String(init?.body)) as { query: string };
-    if (body.query.includes("ListTrips"))
+    // urql sends the short saved-trips query as GET and the mutation as POST.
+    if (url.includes("ListTrips"))
       return Response.json({ data: { trips: { items: [], nextCursor: null } } });
     return Response.json({
       data: { startCreateGeneration: { id: generationId, status: "running", tripId: null } },
