@@ -1,11 +1,12 @@
 import { spawnSync } from "node:child_process";
 import { writeFile } from "node:fs/promises";
 import { parsePublicConfig } from "../src/config/public.ts";
+import { assertReleaseConfig } from "../src/config/release.ts";
+import { parseBuildConfig } from "../src/config/server.ts";
 const revision = process.env.UI_ASSET_REVISION;
 if (!revision || !/^[a-f0-9]{40}$/.test(revision)) throw new Error("Invalid UI_ASSET_REVISION");
 const config = parsePublicConfig(process.env);
-if (config.mode === "live" && new URL(config.graphqlUrl).protocol !== "https:")
-  throw new Error("Live GraphQL URL must use HTTPS");
+assertReleaseConfig(config, parseBuildConfig(process.env).siteOrigin);
 const result = spawnSync("node_modules/.bin/next", ["build", "--webpack"], {
   stdio: "inherit",
   env: { ...process.env, NEXT_TELEMETRY_DISABLED: "1" },

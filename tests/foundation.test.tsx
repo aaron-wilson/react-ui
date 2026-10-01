@@ -5,6 +5,7 @@ import { THEME_KEY, ThemeToggle, themeScript } from "../src/components/ThemeTogg
 import { contentTypeFor } from "../scripts/static-types.mjs";
 import { ServiceStatus } from "../src/components/ServiceStatus";
 import { parsePublicConfig } from "../src/config/public";
+import { assertReleaseConfig } from "../src/config/release";
 import { createScopedClient } from "../src/graphql/client";
 import { ListTrips } from "../src/graphql/operations";
 
@@ -27,6 +28,45 @@ it("rejects unsafe public endpoints and switches themes by keyboard", async () =
   await userEvent.keyboard("{Enter}");
   expect(document.documentElement.dataset.theme).toBe("dark");
   expect(localStorage.getItem("wander-theme")).toBe("dark");
+});
+
+it("rejects a live release whose origins disagree, without echoing values", () => {
+  const live = (extra: Record<string, string> = {}) =>
+    parsePublicConfig({
+      NEXT_PUBLIC_APP_MODE: "live",
+      NEXT_PUBLIC_GRAPHQL_URL: "https://api.wander.example/graphql",
+      NEXT_PUBLIC_COGNITO_DOMAIN: "https://auth.wander.example",
+      NEXT_PUBLIC_COGNITO_CLIENT_ID: "PRIVATE_CLIENT",
+      NEXT_PUBLIC_COGNITO_ISSUER: "https://issuer.example/pool",
+      NEXT_PUBLIC_AUTH_REDIRECT_URI: "https://wander.example/auth/callback/",
+      ...extra,
+    });
+  expect(() => assertReleaseConfig(live(), "https://wander.example")).not.toThrow();
+  expect(() => assertReleaseConfig(parsePublicConfig({}), "http://localhost:3001")).not.toThrow();
+  const rejected: [ReturnType<typeof live>, string, string][] = [
+    [live(), "http://wander.example", "UI_SITE_ORIGIN"],
+    [live(), "https://other.example", "NEXT_PUBLIC_AUTH_REDIRECT_URI"],
+    [
+      live({ NEXT_PUBLIC_GRAPHQL_URL: "http://api.wander.example/graphql" }),
+      "https://wander.example",
+      "NEXT_PUBLIC_GRAPHQL_URL",
+    ],
+    [
+      live({ NEXT_PUBLIC_GRAPHQL_URL: "https://wander.example/graphql" }),
+      "https://wander.example",
+      "different origins",
+    ],
+  ];
+  for (const [config, site, key] of rejected) {
+    let message = "";
+    try {
+      assertReleaseConfig(config, site);
+    } catch (error) {
+      message = error instanceof Error ? error.message : "";
+    }
+    expect(message).toContain(key);
+    expect(message).not.toMatch(/wander\.example|PRIVATE_CLIENT/);
+  }
 });
 
 it("applies a stored theme before paint and otherwise leaves the system preference to CSS", () => {
